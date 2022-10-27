@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class MovingPath : MonoBehaviour
+namespace View
 {
-    [SerializeField] private Transform[] path;
+    public class MovingPath : MonoBehaviour
+    {
+        [SerializeField] private Transform[] path;
 
-    public Transform[] Path => path;
+        public Transform[] Path => path;
+    }
 }

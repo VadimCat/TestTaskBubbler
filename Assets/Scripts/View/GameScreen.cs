@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-public class GameScreen : MonoBehaviour
+namespace View
 {
-    [SerializeField] private GameView gameView;
+    public class GameScreen : MonoBehaviour
+    {
+        [SerializeField] private GameView gameView;
 
-    public GameView View => gameView;
+        public GameView View => gameView;
+    }
 }

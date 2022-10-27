@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Character : MonoBehaviour
+namespace View
 {
-    [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private List<Transform> path;
-
-    private Queue<Transform> curentPath;
-
-    public event Action OnPathEmpty;
-
-    private bool isPathEndFired = true;
-    
-    public void SetPath(Transform[] pathTransforms)
+    public class Character : MonoBehaviour
     {
-        curentPath = new Queue<Transform>(pathTransforms);
-    }
+        [SerializeField] private NavMeshAgent agent;
+        [SerializeField] private List<Transform> path;
+
+        private Queue<Transform> curentPath;
+
+        public event Action OnPathEmpty;
+
+        private bool isPathEndFired = true;
     
-    private void Update()
-    {
-        if (Mathf.Approximately(agent.remainingDistance, 0) && curentPath != null && curentPath.TryDequeue(out var nextPoint))
+        public void SetPath(Transform[] pathTransforms)
         {
-            isPathEndFired = false;
-            agent.SetDestination(nextPoint.position);
+            curentPath = new Queue<Transform>(pathTransforms);
         }
-        else if(curentPath != null && !isPathEndFired && Mathf.Approximately(agent.remainingDistance, 0))
+    
+        private void Update()
         {
-            OnPathEmpty?.Invoke();
-            isPathEndFired = true;
+            if (Mathf.Approximately(agent.remainingDistance, 0) && curentPath != null && curentPath.TryDequeue(out var nextPoint))
+            {
+                isPathEndFired = false;
+                agent.SetDestination(nextPoint.position);
+            }
+            else if(curentPath != null && !isPathEndFired && Mathf.Approximately(agent.remainingDistance, 0))
+            {
+                OnPathEmpty?.Invoke();
+                isPathEndFired = true;
+            }
         }
     }
 }
