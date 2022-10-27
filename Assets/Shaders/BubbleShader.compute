@@ -1,0 +1,29 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+bool saveMesh;
+float3 bubblePoint;
+float3 bubbleDirection;
+
+float maxRadius;
+float maxHeight;
+
+RWStructuredBuffer<float3> _VertexBuffer;
+RWStructuredBuffer<float3> _DisplacedVertexBuffer;
+
+[numthreads(16,1,1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    float dist = distance(_VertexBuffer[id.x], bubblePoint);
+    float height = max(0, maxHeight - (1  /maxRadius) * dist * dist);
+    
+    _DisplacedVertexBuffer[id.x] = _VertexBuffer[id.x] + bubbleDirection * height;
+    
+    _DisplacedVertexBuffer[id.x].y = min(_DisplacedVertexBuffer[id.x].y, maxHeight);
+    
+    if (saveMesh)
+        _VertexBuffer[id.x] = _DisplacedVertexBuffer[id.x];
+}
